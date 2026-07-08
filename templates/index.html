@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Doctor Appointment</title>
+    <style>
+        /* -------------------------------
+           Global & Background Styles
+        ------------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(120deg, #74ebd5, #ACB6E5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 40px 20px;
+            transition: background 1s ease;
+        }
+
+        .background {
+            position: fixed;
+            inset: 0;
+            background: url('https://cdn.pixabay.com/photo/2016/11/29/05/08/doctor-1861008_1280.jpg') center/cover no-repeat;
+            opacity: 0.15;
+            filter: blur(8px);
+            z-index: -1;
+        }
+
+        h1, h2 {
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+        }
+
+        /* -------------------------------
+           Table Styling (Improved)
+        ------------------------------- */
+        table {
+            width: 90%;
+            max-width: 900px;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f6ff;
+            color: #004b7f;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f7fbff;
+            transition: background 0.3s ease;
+        }
+
+        /* -------------------------------
+           Form Styling
+        ------------------------------- */
+        form {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            animation: fadeUp 1.2s ease;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            margin-top: 6px;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.9);
+            font-size: 1em;
+            transition: box-shadow 0.3s ease, transform 0.2s;
+        }
+
+        input:focus, select:focus {
+            box-shadow: 0 0 8px #00bcd4;
+            transform: scale(1.02);
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #0072ff, #00c6ff);
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 20px rgba(0, 114, 255, 0.6);
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-effect 0.6s linear;
+            background: rgba(255, 255, 255, 0.6);
+            width: 100px;
+            height: 100px;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-effect {
+            to {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        /* -------------------------------
+           Animations
+        ------------------------------- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* -------------------------------
+           Footer
+        ------------------------------- */
+        .footer {
+            margin-top: 40px;
+            color: #fff;
+            text-align: center;
+            font-size: 0.9em;
+            opacity: 0.85;
+        }
+
+        /* -------------------------------
+           Responsive Design
+        ------------------------------- */
+        @media (max-width: 600px) {
+            form {
+                padding: 20px;
+            }
+
+            th, td {
+                font-size: 0.9em;
+            }
+
+            button {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background"></div>
+
+    <h2>Available Doctors</h2>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Specialization</th>
+            <th>Time Slots</th>
+        </tr>
+        {% for doctor in doctors %}
+        <tr>
+            <td>{{ doctor[0] }}</td>
+            <td>{{ doctor[1] }}</td>
+            <td>{{ doctor[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h1>Book a Doctor Appointment</h1>
+    <form method="POST" action="/book">
+        <label for="name">Name:</label>
+        <input type="text" name="name" required placeholder="Your full name">
+
+        <label for="age">Age:</label>
+        <input type="number" name="age" required min="1" placeholder="e.g. 30">
+
+        <label for="phone">Phone:</label>
+        <input type="text" name="phone" required pattern="\d{10}" title="Phone number must be exactly 10 digits" placeholder="10-digit number">
+
+        <label for="department">Department:</label>
+        <select name="department" id="department" required>
+            {% for dept in departments %}
+                <option value="{{ dept }}">{{ dept }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="date">Date:</label>
+        <input type="date" name="date" id="date" required>
+
+        <label for="time">Available Time Slots:</label>
+        <select name="time" id="time" required>
+            <option value="">-- Select Department First --</option>
+        </select>
+
+        <button type="submit">Book Appointment</button>
+    </form>
+
+    <div class="footer">
+        © 2025 Doctor Appointment System | Your Health, Our Priority
+    </div>
+
+    <script>
+        // Background gradient animation
+        const gradients = [
+            ["#74ebd5", "#ACB6E5"],
+            ["#89f7fe", "#66a6ff"],
+            ["#a8edea", "#fed6e3"],
+            ["#f6d365", "#fda085"]
+        ];
+        let index = 0;
+        setInterval(() => {
+            index = (index + 1) % gradients.length;
+            document.body.style.background = `linear-gradient(120deg, ${gradients[index][0]}, ${gradients[index][1]})`;
+        }, 6000);
+
+        // Ripple animation for button click
+        document.querySelector("button").addEventListener("click", function(e) {
+            let ripple = document.createElement("span");
+            ripple.classList.add("ripple");
+            ripple.style.left = `${e.offsetX}px`;
+            ripple.style.top = `${e.offsetY}px`;
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // Department → Time Slot mapping
+        const departmentTimes = {
+            {% for doctor in doctors %}
+                "{{ doctor[1] }}": "{{ doctor[2] }}",
+            {% endfor %}
+        };
+
+        const departmentSelect = document.getElementById("department");
+        const timeSelect = document.getElementById("time");
+
+        departmentSelect.addEventListener("change", () => {
+            const selectedDept = departmentSelect.value;
+            const timeSlot = departmentTimes[selectedDept];
+            timeSelect.innerHTML = "";
+            if (timeSlot) {
+                const option = document.createElement("option");
+                option.value = timeSlot;
+                option.textContent = timeSlot;
+                timeSelect.appendChild(option);
+            } else {
+                const option = document.createElement("option");
+                option.textContent = "No time slots available";
+                timeSelect.appendChild(option);
+            }
+        });
+
+        // Date limits (today → 3 months)
+        const dateInput = document.getElementById("date");
+        const today = new Date();
+        const maxDate = new Date();
+        maxDate.setMonth(today.getMonth() + 3);
+
+        const formatDate = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        dateInput.min = formatDate(today);
+        dateInput.max = formatDate(maxDate);
+    </script>
+</body>
+</html>
+
+
+
