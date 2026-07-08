@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Success</title>
+    <style>
+        /* -------------------------------
+           Global & Background
+        ------------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(120deg, #74ebd5, #ACB6E5);
+            transition: background 1s ease;
+        }
+
+        .background {
+            position: fixed;
+            inset: 0;
+            background: url('https://cdn.pixabay.com/photo/2016/11/29/05/08/doctor-1861008_1280.jpg') center/cover no-repeat;
+            opacity: 0.12;
+            filter: blur(8px);
+            z-index: -1;
+        }
+
+        /* -------------------------------
+           Success Card
+        ------------------------------- */
+        .success-card {
+            background: #ffffff; /* Full white for readability */
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            animation: fadeUp 1s ease;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .details {
+            font-size: 18px;
+            color: #333; /* Dark text for readability */
+            text-align: left;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #0072ff, #00c6ff);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
+        }
+
+        .back-home:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 114, 255, 0.6);
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-effect 0.6s linear;
+            background: rgba(255,255,255,0.6);
+            width: 100px;
+            height: 100px;
+            pointer-events: none;
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes ripple-effect {
+            to { transform: scale(3); opacity: 0; }
+        }
+
+        /* Responsive */
+        @media(max-width: 500px){
+            .success-card {
+                padding: 30px 20px;
+            }
+            .details {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background"></div>
+
+    <div class="success-card">
+        <p class="success-message">✅ Appointment booked successfully!</p>
+
+        {% if appointment %}
+        <div class="details">
+            <p><strong>Summary:</strong></p>
+            <ul>
+                <li><strong>Name:</strong> {{ appointment[1] }}</li>
+                <li><strong>Age:</strong> {{ appointment[2] }}</li>
+                <li><strong>Phone:</strong> {{ appointment[3] }}</li>
+                <li><strong>Doctor Department:</strong> {{ appointment[4] }}</li>
+                <li><strong>Date:</strong> {{ appointment[5]|datetimeformat }}</li>
+                <li><strong>Time:</strong> {{ appointment[6] }}</li>
+            </ul>
+        </div>
+        {% else %}
+            <p style="color:#333;">No appointment data available.</p>
+        {% endif %}
+
+        <a href="{{ url_for('landing') }}" class="back-home">← Back to Home</a>
+    </div>
+
+    <script>
+        // Ripple effect for back button
+        document.querySelector('.back-home').addEventListener('click', function(e){
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            ripple.style.left = `${e.offsetX}px`;
+            ripple.style.top = `${e.offsetY}px`;
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // Gradient background animation
+        const gradients = [
+            ["#74ebd5", "#ACB6E5"],
+            ["#89f7fe", "#66a6ff"],
+            ["#a8edea", "#fed6e3"],
+            ["#f6d365", "#fda085"]
+        ];
+        let index = 0;
+        setInterval(() => {
+            index = (index + 1) % gradients.length;
+            document.body.style.background = `linear-gradient(120deg, ${gradients[index][0]}, ${gradients[index][1]})`;
+        }, 6000);
+    </script>
+
+</body>
+</html>
+
