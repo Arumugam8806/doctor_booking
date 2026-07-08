@@ -1,0 +1,201 @@
+<!-- templates/admin_login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <style>
+        /* -------------------------------
+           Global & Background Styles
+        ------------------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(120deg, #74ebd5, #ACB6E5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 1s ease;
+        }
+
+        .background {
+            position: fixed;
+            inset: 0;
+            background: url('https://cdn.pixabay.com/photo/2016/11/29/05/08/doctor-1861008_1280.jpg') center/cover no-repeat;
+            opacity: 0.15;
+            filter: blur(8px);
+            z-index: -1;
+        }
+
+        /* -------------------------------
+           Login Card
+        ------------------------------- */
+        .login-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeUp 1s ease;
+        }
+
+        h2 {
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        p.error {
+            color: #ff4d4f;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            margin-bottom: 20px;
+            font-size: 1em;
+            transition: box-shadow 0.3s ease, transform 0.2s;
+            background-color: rgba(255,255,255,0.9);
+        }
+
+        input[type="password"]:focus {
+            box-shadow: 0 0 8px #00bcd4;
+            transform: scale(1.02);
+        }
+
+        button {
+            padding: 12px 25px;
+            width: 100%;
+            background: linear-gradient(135deg, #0072ff, #00c6ff);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 20px rgba(0, 114, 255, 0.6);
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-effect 0.6s linear;
+            background: rgba(255,255,255,0.6);
+            width: 100px;
+            height: 100px;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-effect {
+            to { transform: scale(3); opacity: 0; }
+        }
+
+        /* Fade animation */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media(max-width: 500px){
+            .login-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background"></div>
+
+    <div class="login-card">
+        <h2>Admin Login</h2>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('admin_auth') }}">
+            <label>Enter Admin Password:</label>
+            <input type="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <a href="{{ url_for('landing') }}" class="back-link">← Back</a>
+    </div>
+
+    <script>
+        // Ripple effect for button
+        document.querySelector("button").addEventListener("click", function(e){
+            let ripple = document.createElement("span");
+            ripple.classList.add("ripple");
+            ripple.style.left = `${e.offsetX}px`;
+            ripple.style.top = `${e.offsetY}px`;
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // Gradient background animation
+        const gradients = [
+            ["#74ebd5", "#ACB6E5"],
+            ["#89f7fe", "#66a6ff"],
+            ["#a8edea", "#fed6e3"],
+            ["#f6d365", "#fda085"]
+        ];
+        let index = 0;
+        setInterval(() => {
+            index = (index + 1) % gradients.length;
+            document.body.style.background = `linear-gradient(120deg, ${gradients[index][0]}, ${gradients[index][1]})`;
+        }, 6000);
+    </script>
+
+</body>
+</html>
